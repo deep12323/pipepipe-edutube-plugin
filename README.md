@@ -36,7 +36,7 @@ The plugin package contains only your own code. These libraries are `compileOnly
 | `login` | Optional cookie login: `{"url": "https://...", "cookie": "<cookie name>", "key": "<preference key>"}`. The settings page gets Login and Log out buttons. Login opens `url` in a web view and, once the cookie is set, stores the cookie header under `key` (default `login_cookies`); log out stores an empty string. Read it with `context.getPreferences()`, `addChangeListener` reports changes. `url` must be https. |
 | `theme` | Optional primary colors, applied by the app as an overlay on its light, dark and black themes while your service is selected: `{"light": "#F57C00", "dark": "#A35300"}`. Colors are `#RRGGBB`. At least one of `light` and `dark` is needed, a missing one is taken from the other; the black theme uses `dark`. The status bar uses the primary color; the accent color is black in the light theme and white in the dark theme, and cannot be configured. |
 
-The `serviceId` passed to `createService` must be handed to the `StreamingService` constructor unchanged.
+The `serviceId` passed to `createService` must be handed to the `StreamingService` constructor unchanged. It is derived from `pluginId` by the host, so it is the same on every device and never changes for a given `pluginId`.
 
 ## Build, sign, publish
 
