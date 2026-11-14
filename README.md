@@ -30,6 +30,7 @@ The plugin package contains only your own code. These libraries are `compileOnly
 | `apiVersion` | `major.minor` of the plugin API you build against. Currently `1.0`. A host loads plugins with the same major and a minor not above its own. |
 | `author` | Required. Shown in the plugin list. |
 | `entryClass` | Class implementing `PipePipePlugin`. |
+| `issueUrl` | Optional, https. Where users report bugs of your plugin. When a failure comes from your code, PipePipe sends the user here instead of its own tracker; without it they are told to reach you by the author name. |
 | `description` | Optional. |
 | `icon` | Optional, path of a PNG/WebP in the package. Square, single color, transparent background, at most 512 px. The app tints it. |
 | `settings` | Optional list of `string` or `boolean` settings. The app renders them; read the values with `context.getPreferences()` (see `MyService.getBaseUrl()`). |

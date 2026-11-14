@@ -6,6 +6,7 @@
   "apiVersion": "1.0",
   "author": "Your Name",
   "entryClass": "com.example.myservice.MyServicePlugin",
+  "issueUrl": "https://github.com/you/myservice/issues",
   "description": "Describe what this service provides.",
   "icon": "icon.png",
   "settings": [
