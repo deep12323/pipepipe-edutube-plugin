@@ -36,7 +36,10 @@ public final class EducationalClassifier {
             "steve mould", "nilered", "two minute papers", "domain of science",
             "sabine hossenfelder", "lex fridman", "big think", "academy of ideas",
             "philosophy tube", "overly sarcastic productions", "fall of civilizations",
-            "ben eater", "derek banas", "sentdex", "sentdex", "stand-up maths"
+            "ben eater", "derek banas", "sentdex", "stand-up maths",
+            "the cyber mentor", "networkchuck", "david bombal", "john hammond",
+            "liveoverflow", "edureka", "simplilearn", "programming with mosh",
+            "computer science", "cs dojo", "tech with tim"
     );
 
     // Academic curricula, course, and educational terminology
@@ -52,6 +55,9 @@ public final class EducationalClassifier {
             "astrophysics", "neuroscience", "genetics", "microbiology",
             "macroeconomics", "microeconomics", "epistemology", "metaphysics",
             "deep learning", "machine learning", "neural network", "linear regression",
+            "ethical hacking", "cybersecurity", "cyber security", "penetration testing",
+            "infosec", "reverse engineering", "malware analysis", "network security",
+            "cryptography", "bug bounty", "kali linux", "web security",
             "masterclass", "crash course", "study guide", "exam review",
             "solved problems", "step by step guide", "comprehensive guide"
     );

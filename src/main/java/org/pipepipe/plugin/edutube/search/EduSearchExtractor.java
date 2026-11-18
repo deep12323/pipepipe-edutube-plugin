@@ -8,7 +8,10 @@ import org.schabi.newpipe.extractor.downloader.Downloader;
 import org.schabi.newpipe.extractor.exceptions.ExtractionException;
 import org.schabi.newpipe.extractor.exceptions.ParsingException;
 import org.schabi.newpipe.extractor.linkhandler.SearchQueryHandler;
+import org.schabi.newpipe.extractor.linkhandler.SearchQueryHandlerFactory;
 import org.schabi.newpipe.extractor.search.SearchExtractor;
+import org.schabi.newpipe.extractor.search.filter.FilterItem;
+import org.schabi.newpipe.extractor.services.youtube.linkHandler.YoutubeSearchQueryHandlerFactory;
 import org.schabi.newpipe.extractor.stream.StreamInfoItem;
 import org.pipepipe.plugin.edutube.filter.AntiBrainrotFilter;
 import org.pipepipe.plugin.edutube.filter.EducationalClassifier;
@@ -53,16 +56,33 @@ public final class EduSearchExtractor extends SearchExtractor {
         }
 
         try {
-            final SearchQueryHandler ytHandler = ServiceList.YouTube
-                    .getSearchQHFactory()
-                    .fromQuery(query);
+            final SearchQueryHandlerFactory ytSearchFactory = ServiceList.YouTube.getSearchQHFactory();
+            FilterItem allFilter = null;
+            if (ytSearchFactory instanceof YoutubeSearchQueryHandlerFactory) {
+                allFilter = ((YoutubeSearchQueryHandlerFactory) ytSearchFactory).getFilterItem(0);
+            }
+            if (allFilter == null) {
+                allFilter = new FilterItem(0, "all");
+            }
+
+            final SearchQueryHandler ytHandler = ytSearchFactory.fromQuery(
+                    query,
+                    List.of(allFilter),
+                    null
+            );
 
             this.delegateYtExtractor = ServiceList.YouTube.getSearchExtractor(ytHandler);
             if (this.delegateYtExtractor != null) {
+                if (getExtractorLocalization() != null) {
+                    this.delegateYtExtractor.forceLocalization(getExtractorLocalization());
+                }
+                if (getExtractorContentCountry() != null) {
+                    this.delegateYtExtractor.forceContentCountry(getExtractorContentCountry());
+                }
                 this.delegateYtExtractor.fetchPage();
             }
         } catch (final Exception e) {
-            throw new ExtractionException("Failed to initialize educational search", e);
+            throw new ExtractionException("Failed to initialize educational search: " + e.getMessage(), e);
         }
     }
 
