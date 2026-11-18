@@ -67,7 +67,7 @@ Download and install the latest release of **PipePipe** from the official releas
 2. Ensure **Enable plugins** is toggled **ON**.
 3. Tap **Add repository** and paste the raw repository index URL:
    ```text
-   https://raw.githubusercontent.com/<YOUR_GITHUB_USERNAME>/pipepipe-edutube-plugin/main/build/repo/index.json
+   https://raw.githubusercontent.com/deep12323/pipepipe-edutube-plugin/main/build/repo/index.json
    ```
 4. Find **EduTube** in the available plugins list and tap **Install**.
 5. Restart PipePipe.
@@ -89,7 +89,7 @@ Download and install the latest release of **PipePipe** from the official releas
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/<YOUR_GITHUB_USERNAME>/pipepipe-edutube-plugin.git
+git clone https://github.com/deep12323/pipepipe-edutube-plugin.git
 cd pipepipe-edutube-plugin
 
 # 2. Run unit tests
