@@ -1,21 +1,52 @@
 {
-  "pluginId": "com.example.myservice",
-  "name": "MyService",
+  "pluginId": "org.pipepipe.plugin.edutube",
+  "name": "EduTube",
   "versionCode": 1,
   "versionName": "1.0.0",
   "apiVersion": "1.0",
-  "author": "Your Name",
-  "entryClass": "com.example.myservice.MyServicePlugin",
-  "issueUrl": "https://github.com/you/myservice/issues",
-  "description": "Describe what this service provides.",
+  "author": "EduTube Open Source",
+  "entryClass": "org.pipepipe.plugin.edutube.EduTubePlugin",
+  "description": "Distraction-free YouTube service dedicated strictly to educational courses, university lectures, STEM, programming, and academic content with zero entertainment or brain-rot.",
   "icon": "icon.png",
+  "theme": {
+    "light": "#0D47A1",
+    "dark": "#1565C0"
+  },
   "settings": [
     {
-      "key": "base_url",
+      "key": "strict_academic_mode",
+      "type": "boolean",
+      "title": "Strict Academic Mode",
+      "summary": "Strictly require videos to originate from verified educational institutions or contain verified academic course keywords.",
+      "default": true
+    },
+    {
+      "key": "block_shorts",
+      "type": "boolean",
+      "title": "Block All YouTube Shorts",
+      "summary": "Block all YouTube Shorts and videos shorter than the minimum duration to prevent doom-scrolling.",
+      "default": true
+    },
+    {
+      "key": "min_duration_seconds",
       "type": "string",
-      "title": "Base URL",
-      "summary": "Override the site used by this service",
-      "default": "https://example.com"
+      "title": "Minimum Video Duration (Seconds)",
+      "summary": "Discard videos shorter than this threshold (default: 180 seconds / 3 minutes).",
+      "default": "180"
+    },
+    {
+      "key": "block_sensationalism",
+      "type": "boolean",
+      "title": "Block Clickbait Sensationalism",
+      "summary": "Filter out videos with excessive capital letters, spam emojis, and clickbait patterns.",
+      "default": true
+    },
+    {
+      "key": "custom_blocked_keywords",
+      "type": "string",
+      "title": "Custom Blocked Keywords",
+      "summary": "Comma-separated list of additional words or phrases to block from search and feeds.",
+      "default": ""
     }
   ]
 }

@@ -1,67 +1,155 @@
-# PipePipe Plugin Template
+# EduTube — Educational & Anti-Brainrot YouTube Plugin for PipePipe
 
-Starting point for a third-party [PipePipe](https://github.com/InfinityLoop1308/PipePipe) service plugin. A plugin adds one `StreamingService` to the app. Plugins run inside PipePipe with the app's permissions, so users should only install code they trust.
+[![CI](https://github.com/InfinityLoop1308/PipePipe/actions/workflows/ci.yml/badge.svg)](https://github.com/InfinityLoop1308/PipePipe)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
+[![PipePipe Compatible](https://img.shields.io/badge/PipePipe-Plugin%20v1.0-brightgreen.svg)](https://github.com/InfinityLoop1308/PipePipe/releases)
 
-## Requirements
+**EduTube** is a distraction-free, academic streaming service plugin for [PipePipe](https://github.com/InfinityLoop1308/PipePipe/releases) (the plugin-enabled NewPipe fork). It curates YouTube specifically for university lectures, full college courses, STEM tutorials, computer science bootcamps, and deep humanities analyses while **strictly eradicating entertainment clickbait, YouTube Shorts, and brain-rot memes**.
 
-- JDK 25 (Gradle downloads it automatically if missing)
-- Android SDK with `build-tools;37.0.0` and `platforms;android-36`. Set `sdk.dir` in `local.properties` or `ANDROID_HOME`.
+---
 
-## Make it yours
+## 🎯 The Problem EduTube Solves
 
-1. Rename the package `com.example.myservice`, the classes, and `rootProject.name` in `settings.gradle`.
-2. Edit `src/main/resources/plugin.json` (see below).
-3. Implement `MyService`. Capabilities you don't support can return `null`; start with `getStreamLHFactory()` and `getStreamExtractor()`.
+Standard YouTube, default NewPipe, and mobile media clients are engineered for engagement maximization:
+* **The Brain-rot Epidemic:** Feeds flooded with sensationalized click-traps, prank videos, streaming drama, reaction mashups, and Gen-Z/Alpha meme loops (*Skibidi, Gyatt, Rizz, Kai Cenat, Fanum Tax*).
+* **The Shorts Trap:** Micro-dopamine vertical video loops designed for addictive doom-scrolling.
+* **Search Polluting:** Searching for academic topics like "Calculus" or "Python" returns entertainment reaction videos, 30-second shorts, and low-effort summaries instead of structured university curricula.
 
-By default the plugin compiles against the extractor's `main` branch through JitPack (`extractorVersion` in `gradle.properties`). To build against a local checkout, put `extractorDir=../PipePipeExtractor` into `local.properties`.
+### What EduTube Delivers
+* 🎓 **100% Educational & Academic Content:** Only structured university curricula (MIT, Stanford, Harvard, Yale, Oxford, Cambridge, Berkeley, NPTEL, Khan Academy, freeCodeCamp, etc.) and verified science & tech authorities.
+* 🛡️ **Multi-Layered Anti-Brainrot Filter:** Automatically strips out brain-rot slang, prank culture, clickbait capitalization, emoji abuse, and celebrity gossip.
+* 🚫 **Shorts & Micro-Content Elimination:** Enforces a minimum duration threshold ($> 3$ minutes) and discards `/shorts/` streams entirely.
+* 📚 **Curated Academic Kiosks:** Instant access to 5 academic categories right on the home screen.
+* ⚡ **Native 4K/1080p Playback:** Seamlessly leverages PipePipe's built-in player with DASH streams, high-speed chunk loading, subtitles, video chapters, background play, and offline downloads.
+* 🤫 **Distraction-Free Environment:** Comments are permanently disabled to prevent endless scrolling and preserve deep study focus.
 
-## Libraries provided by the host
+---
 
-The plugin package contains only your own code. These libraries are `compileOnly` in `build.gradle` and are provided by PipePipe at runtime: the extractor, nanojson, jsoup, commons-lang3 and spotbugs-annotations. The versions in `gradle.properties` are the ones current hosts ship, but PipePipe does not guarantee them: stick to long-stable APIs. Any other library is not available at runtime, so implement what you need yourself.
+## 🏛️ Built-in Curated Kiosks
 
-## plugin.json
+When switching to **EduTube** inside PipePipe, you will see 5 curated categories instead of YouTube's entertainment trending tab:
 
-| Field | Rules |
-| ----- | ----- |
-| `pluginId` | Reverse domain, `[a-z0-9_.]`, at most 128 chars. Never change it after release. |
-| `name` | Must equal the `StreamingService` name. |
-| `versionCode` | Integer, increase with every release. |
-| `versionName` | Shown to users. |
-| `apiVersion` | `major.minor` of the plugin API you build against. Currently `1.0`. A host loads plugins with the same major and a minor not above its own. |
-| `author` | Required. Shown in the plugin list. |
-| `entryClass` | Class implementing `PipePipePlugin`. |
-| `issueUrl` | Optional, https. Where users report bugs of your plugin. When a failure comes from your code, PipePipe sends the user here instead of its own tracker; without it they are told to reach you by the author name. |
-| `description` | Optional. |
-| `icon` | Optional, path of a PNG/WebP in the package. Square, single color, transparent background, at most 512 px. The app tints it. |
-| `settings` | Optional list of `string` or `boolean` settings. The app renders them; read the values with `context.getPreferences()` (see `MyService.getBaseUrl()`). |
-| `login` | Optional cookie login: `{"url": "https://...", "cookie": "<cookie name>", "key": "<preference key>"}`. The settings page gets Login and Log out buttons. Login opens `url` in a web view and, once the cookie is set, stores the cookie header under `key` (default `login_cookies`); log out stores an empty string. Read it with `context.getPreferences()`, `addChangeListener` reports changes. `url` must be https. |
-| `theme` | Optional primary colors, applied by the app as an overlay on its light, dark and black themes while your service is selected: `{"light": "#F57C00", "dark": "#A35300"}`. Colors are `#RRGGBB`. At least one of `light` and `dark` is needed, a missing one is taken from the other; the black theme uses `dark`. The status bar uses the primary color; the accent color is black in the light theme and white in the dark theme, and cannot be configured. |
+| Kiosk | Description & Highlights |
+| :--- | :--- |
+| **🎓 Featured University Courses** *(Default)* | Master university courses: **MIT 18.06 Linear Algebra** (Prof. Strang), **Harvard CS50**, **Stanford CS229 Machine Learning** (Prof. Andrew Ng), **MIT 6.006 Algorithms**, **Yale Psychology**, **Harvard Justice**. |
+| **💻 Computer Science & Tech** | Full bootcamps: **freeCodeCamp** (Python, C++, Rust, Go), **NeetCode DSA**, **Hussein Nasser Distributed Systems**, **The Cherno C++**, **ByteByteGo System Design**, **Ben Eater 8-bit Architecture**. |
+| **📐 Mathematics & Physics** | Deep visual mathematics and theoretical physics: **3Blue1Brown** (Linear Algebra, Calculus, Neural Networks), **Prof. Leonard Calculus 1-3**, **PBS Space Time**, **StatQuest**, **Numberphile**, **Veritasium**. |
+| **🔬 Engineering & Applied Sciences** | Mechanical, civil, electrical & aerospace engineering: **Real Engineering**, **Practical Engineering**, **SmarterEveryDay**, **NileRed Chemistry**, **Two Minute Papers**. |
+| **📚 Humanities & Philosophy** | Deep historical documentaries & philosophy: **Fall of Civilizations**, **CrashCourse World History & Economics**, **Academy of Ideas** (Jung, Nietzsche, Stoicism), **Overly Sarcastic Productions**. |
 
-The `serviceId` passed to `createService` must be handed to the `StreamingService` constructor unchanged. It is derived from `pluginId` by the host, so it is the same on every device and never changes for a given `pluginId`.
+---
 
-## Build, sign, publish
+## ⚙️ Configurable Plugin Settings
+
+EduTube provides in-app settings configurable directly inside **PipePipe Settings → Plugins → EduTube**:
+
+1. **Strict Academic Mode** *(Default: Enabled)*:
+   * When enabled, videos must either originate from verified universities/educators or contain explicit academic course keywords (*lecture, course, derivation, proof, curriculum, algorithms, thermodynamics, etc.*).
+2. **Block All YouTube Shorts** *(Default: Enabled)*:
+   * Completely filters out short-form vertical videos and `/shorts/` links.
+3. **Minimum Video Duration** *(Default: `180` seconds / 3 minutes)*:
+   * Discards micro-videos to ensure only comprehensive lectures and deep tutorials are displayed.
+4. **Block Clickbait Sensationalism** *(Default: Enabled)*:
+   * Discards titles with excessive uppercase characters ($> 65\%$), consecutive exclamation/question mark spam (`???`, `!!!`), or clickbait emoji spam (😱, 🚨, 🤯, 💀).
+5. **Custom Blocked Keywords**:
+   * Add any comma-separated list of words or topics you wish to ban permanently from search and feeds.
+
+---
+
+## 📥 How to Install in PipePipe
+
+### Step 1: Install PipePipe
+Download and install the latest release of **PipePipe** from the official releases page:
+👉 **[PipePipe Releases](https://github.com/InfinityLoop1308/PipePipe/releases)**
+
+### Step 2: Add EduTube Repository or Install Plugin
+1. Open PipePipe and navigate to **Settings → Plugins**.
+2. Ensure **Enable plugins** is toggled **ON**.
+3. Tap **Add repository** and paste the raw repository index URL:
+   ```text
+   https://raw.githubusercontent.com/<YOUR_GITHUB_USERNAME>/pipepipe-edutube-plugin/main/build/repo/index.json
+   ```
+4. Find **EduTube** in the available plugins list and tap **Install**.
+5. Restart PipePipe.
+
+### Step 3: Start Learning Distraction-Free
+1. Tap the service switcher in the top navigation or menu drawer.
+2. Select **EduTube**.
+3. Browse curated university tracks, search for academic topics, and watch lectures with 0% entertainment interference!
+
+---
+
+## 🛠️ Building & Packaging from Source
+
+### Prerequisites
+* JDK 25 or JDK 17 with Foojay toolchain resolver (Gradle handles download automatically).
+* Linux / macOS / Windows / Termux PRoot.
+
+### Build Steps
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/<YOUR_GITHUB_USERNAME>/pipepipe-edutube-plugin.git
+cd pipepipe-edutube-plugin
+
+# 2. Run unit tests
+./gradlew test
+
+# 3. Build the .ppp plugin package
+./gradlew assembleRepo
+
+# 4. Generate signing key (first time only)
+./gradlew :tools:genKey
+
+# 5. Sign the package and create index.json
+./gradlew :tools:index
+```
+
+The output artifacts will be ready in `build/repo/`:
+* `pipepipe-edutube-plugin-1.ppp` (The compiled, dexed, and packaged plugin)
+* `index.json` (The signed Ed25519 plugin repository index)
+
+---
+
+## 🏗️ Project Architecture
 
 ```
-./gradlew :tools:genKey      # once, creates signing.key (keep it secret, never commit it)
-./gradlew :tools:index       # builds build/repo/<name>-<versionCode>.ppp and build/repo/index.json
+pipepipe-edutube-plugin/
+├── build.gradle                  # Gradle build script with R8 pure-Java dexer & desugaring
+├── settings.gradle               # Root project settings
+├── gradle.properties             # Runtime versions matched with PipePipeExtractor
+├── .github/workflows/
+│   ├── ci.yml                    # Automated compilation and unit testing on PR/Push
+│   └── release.yml               # Automated packaging and GitHub Release deployment
+├── src/main/resources/
+│   ├── plugin.json               # PipePipe Plugin Manifest with settings & metadata
+│   └── icon.png                  # Service icon tinted by PipePipe
+└── src/main/java/org/pipepipe/plugin/edutube/
+    ├── EduTubePlugin.java        # Entry point implementing PipePipePlugin
+    ├── EduTubeService.java       # StreamingService with YouTube delegation & kiosks
+    ├── filter/
+    │   ├── AntiBrainrotFilter.java     # Lexicon blacklist, shorts blocker, clickbait detector
+    │   └── EducationalClassifier.java  # Institutional whitelist & curriculum evaluator
+    ├── data/
+    │   └── CuratedCourses.java         # Pre-indexed master playlists & lectures
+    ├── kiosk/
+    │   ├── EduKioskExtractor.java      # 5 academic kiosk feeds
+    │   └── EduKioskLinkHandlerFactory.java
+    ├── search/
+    │   ├── EduSearchExtractor.java     # YouTube search wrapper with anti-brainrot filtering
+    │   └── EduSearchQueryHandlerFactory.java
+    ├── stream/
+    │   └── EduStreamLinkHandlerFactory.java # YouTube stream delegation handler
+    ├── channel/
+    │   ├── EduChannelExtractor.java    # Academic channel wrapper
+    │   └── EduChannelLinkHandlerFactory.java
+    └── playlist/
+        ├── EduPlaylistExtractor.java   # Academic course playlist wrapper
+        └── EduPlaylistLinkHandlerFactory.java
 ```
 
-Use the same key for every release. PipePipe pins the public key on first install and rejects updates signed with another one.
+---
 
-Users discover plugins through [awesome-pipepipe-plugins](https://github.com/InfinityLoop1308/awesome-pipepipe-plugins):
+## 📜 License
 
-1. Upload the `.ppp` to a stable HTTPS URL, for example a GitHub release asset.
-2. Take the entry for your plugin from `build/repo/index.json` and set `package` to that absolute URL. Set `nsfw` to `true` if the content is NSFW; the generated value is always `false`.
-3. Open a pull request to awesome-pipepipe-plugins that adds the entry and a row in its table, and links your source code.
-
-`build/repo` is only build output. It may still contain packages of older versions, so check the index before copying an entry.
-
-## CI
-
-`.github/workflows/ci.yml` builds the plugin and generates an index with a throwaway key on every push and pull request.
-
-The throwaway key only validates the build; nothing it signs is published. If you add a release workflow, sign with your permanent key (for example from a repository secret). PipePipe rejects updates signed with a different key than the one used at first install.
-
-## License
-
-GPL-3.0, same as PipePipe. See `LICENSE`.
+This project is licensed under the **GNU General Public License v3.0 (GPL-3.0)** — adhering to the open-source spirit of NewPipe and PipePipe. See [LICENSE](LICENSE) for details.

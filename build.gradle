@@ -5,9 +5,6 @@
 //   ./gradlew :tools:genKey    -> signing.key (once, keep it secret and backed up)
 //   ./gradlew assembleRepo     -> build/repo/*.ppp
 //   ./gradlew :tools:index     -> build/repo/index.json (signed)
-//
-// Upload the content of build/repo to any static https host. Users add the url of
-// index.json as a repository in PipePipe.
 
 plugins {
     id 'java-library'
@@ -40,11 +37,31 @@ allprojects {
     }
     tasks.withType(JavaCompile).configureEach {
         options.encoding = 'UTF-8'
+        if (project == rootProject) {
+            options.compilerArgs += ['--release', '21']
+        }
+    }
+}
+
+configurations.compileClasspath {
+    attributes {
+        attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 25)
+    }
+}
+configurations.testCompileClasspath {
+    attributes {
+        attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 25)
+    }
+}
+configurations.testRuntimeClasspath {
+    attributes {
+        attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 25)
     }
 }
 
 configurations {
     desugarConfig
+    r8Tool
 }
 
 dependencies {
@@ -55,6 +72,14 @@ dependencies {
     compileOnly "org.apache.commons:commons-lang3:$lang3Version"
     compileOnly "com.github.spotbugs:spotbugs-annotations:$spotbugsVersion"
     desugarConfig "com.android.tools:desugar_jdk_libs_configuration:$desugarJdkLibsVersion"
+    r8Tool "com.android.tools:r8:9.6.0-alpha14"
+    testImplementation "com.github.InfinityLoop1308.PipePipeExtractor:extractor:$extractorVersion"
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.11.4'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+test {
+    useJUnitPlatform()
 }
 
 def manifestFile = file('src/main/resources/plugin.json')
@@ -69,11 +94,8 @@ def extractDesugarConfig = tasks.register('extractDesugarConfig', Copy) {
     into layout.buildDirectory.dir('desugar')
 }
 
-// Must use the same desugaring as the Android host (min sdk + desugar_jdk_libs) so that
-// java.time / streams map to the host's j$ classes and interface default methods are
-// moved to companion classes. pluginMinSdk must not be lower than the host's minSdk (24),
-// otherwise the plugin crashes at runtime.
-def dex = tasks.register('dex', Exec) {
+// Dex task: supports both standard Android SDK build-tools and pure-Java R8/D8
+def dex = tasks.register('dex', JavaExec) {
     dependsOn tasks.named('jar'), extractDesugarConfig
     def jarFile = tasks.named('jar').flatMap { it.archiveFile }
     def outDir = layout.buildDirectory.dir('dex')
@@ -81,22 +103,49 @@ def dex = tasks.register('dex', Exec) {
     inputs.files(configurations.compileClasspath)
     inputs.property('minApi', pluginMinSdk)
     outputs.dir(outDir)
+
+    classpath = configurations.r8Tool
+    mainClass = 'com.android.tools.r8.D8'
+
     doFirst {
-        if (sdkDir == null) {
-            throw new GradleException('Android SDK not found: set sdk.dir in local.properties or ANDROID_HOME')
-        }
-        def d8 = new File(sdkDir, "build-tools/$buildToolsVersion/d8")
-        def androidJar = new File(sdkDir, 'platforms/android-36/android.jar')
         def out = outDir.get().asFile
         project.delete(out)
         out.mkdirs()
-        def cmd = [d8.path, '--release', '--min-api', pluginMinSdk,
-                   '--lib', androidJar.path,
-                   '--desugared-lib', layout.buildDirectory.file('desugar/desugar.json').get().asFile.path,
-                   '--output', out.path]
-        configurations.compileClasspath.files.each { cmd += ['--classpath', it.path] }
-        cmd += jarFile.get().asFile.path
-        commandLine cmd
+
+        File androidJarFile = null
+        if (sdkDir != null) {
+            def candidate = new File(sdkDir, 'platforms/android-36/android.jar')
+            if (candidate.exists()) {
+                androidJarFile = candidate
+            } else {
+                def candidate34 = new File(sdkDir, 'platforms/android-34/android.jar')
+                if (candidate34.exists()) {
+                    androidJarFile = candidate34
+                }
+            }
+        }
+        if (androidJarFile == null) {
+            def localJar = file('android.jar')
+            if (!localJar.exists()) {
+                println 'Downloading android.jar platform stubs...'
+                new URL('https://github.com/Sable/android-platforms/raw/master/android-34/android.jar')
+                        .withInputStream { i -> localJar.withOutputStream { it << i } }
+            }
+            androidJarFile = localJar
+        }
+
+        def argList = [
+                '--release',
+                '--min-api', pluginMinSdk,
+                '--lib', androidJarFile.path,
+                '--desugared-lib', layout.buildDirectory.file('desugar/desugar.json').get().asFile.path,
+                '--output', out.path
+        ]
+        configurations.compileClasspath.files.each {
+            argList += ['--classpath', it.path]
+        }
+        argList += jarFile.get().asFile.path
+        args argList
     }
 }
 

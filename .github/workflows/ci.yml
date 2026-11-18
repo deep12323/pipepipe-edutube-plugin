@@ -18,11 +18,8 @@ jobs:
           distribution: temurin
           java-version: '25'
       - uses: gradle/actions/setup-gradle@v4
-      - name: Install Android build tools
-        run: |
-          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null || true
-          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "build-tools;37.0.0" "platforms;android-36"
-      # Only checks that the plugin builds, dexes and produces a valid index; the key is thrown away.
+      - name: Run Unit Tests
+        run: ./gradlew test
       - name: Build and index with a throwaway key
         run: |
           ./gradlew :tools:genKey -PpluginSigningKey="$RUNNER_TEMP/ci.key"
