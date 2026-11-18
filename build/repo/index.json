@@ -1,0 +1,18 @@
+{
+  "plugins":[{
+    "apiVersion":"1.0",
+    "package":"pipepipe-edutube-plugin-1.ppp",
+    "sha256":"34f7dcc2da7ce4723f410e604b7c3b90dff3fae7faa596178a05d10178e7bd22",
+    "signature":"9izgM8uO65Lysrz4zXTytprxYv17qBNf+90JutTP6g9bTMZXEo77+yX447wSKu71aFIC0lWIyxHGOdqzBpxdAQ==",
+    "nsfw":false,
+    "pluginId":"org.pipepipe.plugin.edutube",
+    "author":"EduTube Open Source",
+    "name":"EduTube",
+    "description":"Distraction-free YouTube service dedicated strictly to educational courses, university lectures, STEM, programming, and academic content with zero entertainment or brain-rot.",
+    "publicKey":"Nrd0VKyD7Pmz2SNcm2Z6mvOUKfE6egagjrhzwr3Hq8M=",
+    "versionName":"1.0.0",
+    "versionCode":1
+  }],
+  "name":"EduTube PipePipe Repository",
+  "formatVersion":1
+}
